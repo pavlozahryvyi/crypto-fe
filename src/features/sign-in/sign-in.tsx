@@ -11,7 +11,9 @@ import {
   Input,
   Link as ChakraLink,
 } from "@chakra-ui/react";
-import { Link as RouterLink } from "@tanstack/react-router";
+import { Link as RouterLink, useNavigate } from "@tanstack/react-router";
+import type { SignInResponseType } from "@/api/auth/auth.models";
+import { ACCESS_TOKEN_KEY } from "@/constants";
 
 const { fieldContext, formContext, useFormContext, useFieldContext } =
   createFormHookContexts();
@@ -66,7 +68,15 @@ const { useAppForm } = createFormHook({
 });
 
 export const SignIn: FC = () => {
-  const { mutate: signIn } = useSignInMutation();
+  const navigate = useNavigate({ from: "/signin" });
+
+  const { mutate: signIn } = useSignInMutation({
+    onSuccess: (data: SignInResponseType) => {
+      localStorage.setItem(ACCESS_TOKEN_KEY, data.token);
+
+      navigate({ to: "/" });
+    },
+  });
 
   const form = useAppForm({
     defaultValues: {

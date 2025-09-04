@@ -9,104 +9,109 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as SignupRouteImport } from './routes/signup'
-import { Route as SigninRouteImport } from './routes/signin'
-import { Route as AboutRouteImport } from './routes/about'
-import { Route as IndexRouteImport } from './routes/index'
+import { Route as privateIndexRouteImport } from './routes/(private)/index'
+import { Route as publicSignupRouteImport } from './routes/(public)/signup'
+import { Route as publicSigninRouteImport } from './routes/(public)/signin'
+import { Route as privateAboutRouteImport } from './routes/(private)/about'
 
-const SignupRoute = SignupRouteImport.update({
-  id: '/signup',
+const privateIndexRoute = privateIndexRouteImport.update({
+  id: '/(private)/',
+  path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const publicSignupRoute = publicSignupRouteImport.update({
+  id: '/(public)/signup',
   path: '/signup',
   getParentRoute: () => rootRouteImport,
 } as any)
-const SigninRoute = SigninRouteImport.update({
-  id: '/signin',
+const publicSigninRoute = publicSigninRouteImport.update({
+  id: '/(public)/signin',
   path: '/signin',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AboutRoute = AboutRouteImport.update({
-  id: '/about',
+const privateAboutRoute = privateAboutRouteImport.update({
+  id: '/(private)/about',
   path: '/about',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '/about': typeof AboutRoute
-  '/signin': typeof SigninRoute
-  '/signup': typeof SignupRoute
+  '/about': typeof privateAboutRoute
+  '/signin': typeof publicSigninRoute
+  '/signup': typeof publicSignupRoute
+  '/': typeof privateIndexRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '/about': typeof AboutRoute
-  '/signin': typeof SigninRoute
-  '/signup': typeof SignupRoute
+  '/about': typeof privateAboutRoute
+  '/signin': typeof publicSigninRoute
+  '/signup': typeof publicSignupRoute
+  '/': typeof privateIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
-  '/about': typeof AboutRoute
-  '/signin': typeof SigninRoute
-  '/signup': typeof SignupRoute
+  '/(private)/about': typeof privateAboutRoute
+  '/(public)/signin': typeof publicSigninRoute
+  '/(public)/signup': typeof publicSignupRoute
+  '/(private)/': typeof privateIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/about' | '/signin' | '/signup'
+  fullPaths: '/about' | '/signin' | '/signup' | '/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/about' | '/signin' | '/signup'
-  id: '__root__' | '/' | '/about' | '/signin' | '/signup'
+  to: '/about' | '/signin' | '/signup' | '/'
+  id:
+    | '__root__'
+    | '/(private)/about'
+    | '/(public)/signin'
+    | '/(public)/signup'
+    | '/(private)/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
-  AboutRoute: typeof AboutRoute
-  SigninRoute: typeof SigninRoute
-  SignupRoute: typeof SignupRoute
+  privateAboutRoute: typeof privateAboutRoute
+  publicSigninRoute: typeof publicSigninRoute
+  publicSignupRoute: typeof publicSignupRoute
+  privateIndexRoute: typeof privateIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/signup': {
-      id: '/signup'
-      path: '/signup'
-      fullPath: '/signup'
-      preLoaderRoute: typeof SignupRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/signin': {
-      id: '/signin'
-      path: '/signin'
-      fullPath: '/signin'
-      preLoaderRoute: typeof SigninRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/about': {
-      id: '/about'
-      path: '/about'
-      fullPath: '/about'
-      preLoaderRoute: typeof AboutRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/': {
-      id: '/'
+    '/(private)/': {
+      id: '/(private)/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+      preLoaderRoute: typeof privateIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(public)/signup': {
+      id: '/(public)/signup'
+      path: '/signup'
+      fullPath: '/signup'
+      preLoaderRoute: typeof publicSignupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(public)/signin': {
+      id: '/(public)/signin'
+      path: '/signin'
+      fullPath: '/signin'
+      preLoaderRoute: typeof publicSigninRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/(private)/about': {
+      id: '/(private)/about'
+      path: '/about'
+      fullPath: '/about'
+      preLoaderRoute: typeof privateAboutRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
-  AboutRoute: AboutRoute,
-  SigninRoute: SigninRoute,
-  SignupRoute: SignupRoute,
+  privateAboutRoute: privateAboutRoute,
+  publicSigninRoute: publicSigninRoute,
+  publicSignupRoute: publicSignupRoute,
+  privateIndexRoute: privateIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
