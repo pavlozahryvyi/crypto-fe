@@ -1,4 +1,4 @@
-import { WatchListEntity } from '../watch-list/watch-list.mdel';
+import type { WatchListEntity } from "../watch-list/watch-list.model";
 
 export type UserEntity = {
   id: number;

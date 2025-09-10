@@ -1,4 +1,4 @@
-import { axiosInstance } from "../axios-configuration/instance";
+import { axiosPublicInstance } from "../axios-configuration/instance";
 import type {
   SignInRequestType,
   SignInResponseType,
@@ -11,7 +11,7 @@ export const authApi = {
 
   signIn: async (payload: SignInRequestType): Promise<SignInResponseType> => {
     try {
-      const response = await axiosInstance.post<SignInResponseType>(
+      const response = await axiosPublicInstance.post<SignInResponseType>(
         `${authApi.URL}/signin`,
         payload
       );
@@ -25,7 +25,7 @@ export const authApi = {
 
   signUp: async (payload: SignUpRequestType): Promise<SignUpResponseType> => {
     try {
-      const response = await axiosInstance.post<SignUpResponseType>(
+      const response = await axiosPublicInstance.post<SignUpResponseType>(
         `${authApi.URL}/signup`,
         payload
       );
