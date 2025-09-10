@@ -28,3 +28,13 @@ export type CoinEntity = {
 };
 
 export type CoinListResponseType = Array<CoinEntity>;
+
+export type CoinsListQueryType = {
+  currency?: string;
+  names?: string;
+};
+
+export type CoinsListApiQueryType = {
+  currency: string;
+  names?: string;
+};

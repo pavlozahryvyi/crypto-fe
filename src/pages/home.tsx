@@ -3,9 +3,7 @@ import { ChakraTabs } from "@/features/tabs/tabs";
 import type { FC } from "react";
 
 export const Home: FC = () => {
-  const { data } = useWatchListFavoritesQuery();
-
-  console.log("---data", data);
+  useWatchListFavoritesQuery();
 
   return <ChakraTabs />;
 };

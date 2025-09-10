@@ -37,4 +37,13 @@ export const WatchListApi = {
       throw error;
     }
   },
+
+  removeFavorite: async (id: number): Promise<void> => {
+    try {
+      await axiosPrivateInstance.delete<void>(`${WatchListApi.URL}/?id=${id}`);
+    } catch (error) {
+      console.log("----SOME ERROR");
+      throw error;
+    }
+  },
 };

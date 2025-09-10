@@ -1,6 +1,9 @@
 import { type UseQueryResult, useQuery } from "@tanstack/react-query";
 import { coingeckoApi } from "./coingecko-coins.api";
-import type { CoinListResponseType } from "./coingecko-coins.models";
+import type {
+  CoinListResponseType,
+  CoinsListQueryType,
+} from "./coingecko-coins.models";
 
 type UseGetCoinsListQueryResultType = UseQueryResult<
   CoinListResponseType,
@@ -8,9 +11,14 @@ type UseGetCoinsListQueryResultType = UseQueryResult<
 >;
 
 export const useGetCoinsListQuery = (
-  currency: string = "usd"
-): UseGetCoinsListQueryResultType =>
-  useQuery({
-    queryKey: ["coins-list", currency],
-    queryFn: () => coingeckoApi.coinList(currency),
+  payload: CoinsListQueryType = {},
+  enabled = true
+): UseGetCoinsListQueryResultType => {
+  const apiPayload = { ...payload, currency: payload.currency || "usd" };
+
+  return useQuery({
+    queryKey: ["coins-list", apiPayload],
+    queryFn: () => coingeckoApi.coinList(apiPayload),
+    enabled,
   });
+};

@@ -1,13 +1,19 @@
 import { axiosCoingeckoInstance } from "../axios-configuration/instance";
-import type { CoinListResponseType } from "./coingecko-coins.models";
+import { getQueryParams } from "../utils";
+import type {
+  CoinListResponseType,
+  CoinsListApiQueryType,
+} from "./coingecko-coins.models";
 
 export const coingeckoApi = {
   URL: "/coins/markets",
 
-  coinList: async (currency: string = "usd"): Promise<CoinListResponseType> => {
+  coinList: async (
+    payload: CoinsListApiQueryType
+  ): Promise<CoinListResponseType> => {
     try {
       const response = await axiosCoingeckoInstance.get<CoinListResponseType>(
-        `${coingeckoApi.URL}?vs_currency=${currency}`
+        `${coingeckoApi.URL}?${getQueryParams({ vs_currency: payload.currency, names: payload.names })}`
       );
 
       return response.data;

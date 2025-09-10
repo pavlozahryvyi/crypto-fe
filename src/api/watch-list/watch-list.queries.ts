@@ -40,3 +40,20 @@ export const useAddFavoriteCoinMutation = (
   options: UseAddFavoriteCoinMutationOptionsType = {}
 ): UseAddFavoriteCoinMutationResultType =>
   useMutation({ mutationFn: WatchListApi.addFavorite, ...options });
+
+type UseRemoveFavoriteCoinMutationResultType = UseMutationResult<
+  void,
+  unknown,
+  number
+>;
+
+type UseRemoveFavoriteCoinMutationOptionsType = UseMutationOptions<
+  void,
+  unknown,
+  number
+>;
+
+export const useRemoveFavoriteCoinMutation = (
+  options: UseRemoveFavoriteCoinMutationOptionsType = {}
+): UseRemoveFavoriteCoinMutationResultType =>
+  useMutation({ mutationFn: WatchListApi.removeFavorite, ...options });

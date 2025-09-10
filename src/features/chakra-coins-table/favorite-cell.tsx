@@ -1,21 +1,44 @@
+import type { CoinEntity } from "@/api/congecko-coins/coingecko-coins.models";
+import {
+  useAddFavoriteCoinMutation,
+  useRemoveFavoriteCoinMutation,
+  useWatchListFavoritesQuery,
+} from "@/api/watch-list/watch-list.queries";
 import { IconButton } from "@chakra-ui/react";
 import type { FC } from "react";
-import { MdOutlineAdd } from "react-icons/md";
+import { MdOutlineAdd, MdOutlineRemove } from "react-icons/md";
 
-export const FavoriteCell: FC = () => {
-  // const { mutate: signIn } = useSignInMutation({
-  //     onSuccess: (data: SignInResponseType) => {
-  //       localStorage.setItem(ACCESS_TOKEN_KEY, data.token);
+type FavoriteCallProps = {
+  coin: CoinEntity;
+};
 
-  //       navigate({ to: "/" });
-  //     },
-  //   });
+export const FavoriteCell: FC<FavoriteCallProps> = ({ coin }) => {
+  const { data: favoriteCoins } = useWatchListFavoritesQuery();
 
-  const handleClick = () => {};
+  const { mutate: addToFavorite } = useAddFavoriteCoinMutation();
+
+  const { mutate: removeFromFavorite } = useRemoveFavoriteCoinMutation();
+
+  const isFavorite = favoriteCoins
+    ?.map((coin) => coin.assetId)
+    .includes(coin.name);
+
+  const handleClick = () => {
+    if (!isFavorite) {
+      addToFavorite({ assetId: coin.name, name: coin.name });
+      return;
+    }
+
+    const removedId = favoriteCoins?.find(
+      (favoriteCoin) => favoriteCoin.assetId === coin.name
+    );
+
+    if (removedId) removeFromFavorite(removedId.id);
+  };
 
   return (
     <IconButton variant="outline" size="sm" onClick={handleClick}>
-      <MdOutlineAdd />
+      {isFavorite ? <MdOutlineRemove /> : <MdOutlineAdd />}
     </IconButton>
   );
 };

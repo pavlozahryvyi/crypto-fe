@@ -1,12 +1,19 @@
 import { useGetCoinsListQuery } from "@/api/congecko-coins/coingecko-coins.queries";
+import { useWatchListFavoritesQuery } from "@/api/watch-list/watch-list.queries";
 import { Avatar, Stack, Table } from "@chakra-ui/react";
 import type { FC } from "react";
-import { FavoriteCell } from "./favorite-cell";
 
-export const ChakraCoinsTable: FC = () => {
-  const { data } = useGetCoinsListQuery();
+export const ChakraFavoriteCoinsTable: FC = () => {
+  const { data: favoriteCoins, isSuccess } = useWatchListFavoritesQuery();
 
-  if (!data) return null;
+  const { data: coinsList } = useGetCoinsListQuery(
+    {
+      names: [...new Set(favoriteCoins?.map((coin) => coin.assetId))].join(","),
+    },
+    isSuccess && favoriteCoins.length > 0
+  );
+
+  if (!favoriteCoins || !coinsList) return null;
 
   return (
     <Stack gap="10">
@@ -18,11 +25,10 @@ export const ChakraCoinsTable: FC = () => {
             <Table.ColumnHeader textAlign="end">
               Current Price, ($)
             </Table.ColumnHeader>
-            <Table.ColumnHeader textAlign="center">Favorite</Table.ColumnHeader>
           </Table.Row>
         </Table.Header>
         <Table.Body>
-          {data.map((coin) => (
+          {coinsList.map((coin) => (
             <Table.Row key={coin.id}>
               <Table.Cell>
                 <Avatar.Root>
@@ -32,9 +38,6 @@ export const ChakraCoinsTable: FC = () => {
               </Table.Cell>
               <Table.Cell>{coin.name}</Table.Cell>
               <Table.Cell textAlign="end">$ {coin.current_price}</Table.Cell>
-              <Table.Cell textAlign="center">
-                <FavoriteCell coin={coin} />
-              </Table.Cell>
             </Table.Row>
           ))}
         </Table.Body>
